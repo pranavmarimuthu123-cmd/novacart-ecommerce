@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | NovaCart</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .auth-page {
+            min-height: 75vh;
+            display: grid;
+            place-items: center;
+            padding: 40px 20px;
+            background: #f8f8fc;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 460px;
+            padding: 38px;
+            background: white;
+            border: 1px solid #e9e9f1;
+            border-radius: 22px;
+            box-shadow: 0 15px 45px rgba(30, 25, 80, 0.05);
+        }
+
+        .auth-card h1 {
+            margin: 12px 0;
+            font-size: 30px;
+        }
+
+        .auth-description {
+            color: #77788c;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .auth-form label {
+            display: block;
+            margin: 17px 0 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e2e2ed;
+            border-radius: 10px;
+            outline: none;
+            font: inherit;
+        }
+
+        .auth-form input:focus {
+            border-color: #6254e8;
+            box-shadow: 0 0 0 3px rgba(98, 84, 232, 0.1);
+        }
+
+        .auth-submit {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 10px;
+            background: #6254e8;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .auth-submit:disabled {
+            opacity: 0.65;
+            cursor: wait;
+        }
+
+        .auth-message {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .auth-message.error {
+            display: block;
+            background: #fff0f0;
+            color: #c62828;
+        }
+
+        .auth-message.success {
+            display: block;
+            background: #eafaf0;
+            color: #177245;
+        }
+
+        .auth-bottom {
+            margin-top: 22px;
+            text-align: center;
+            color: #77788c;
+            font-size: 13px;
+        }
+
+        .auth-bottom a {
+            color: #6254e8;
+            font-weight: 700;
+        }
+
+        .auth-logo {
+            display: block;
+            margin-bottom: 35px;
+            text-align: center;
+            font-size: 27px;
+            font-weight: 900;
+            text-decoration: none;
+            color: #17182b;
+        }
+
+        .auth-logo span {
+            color: #6254e8;
+        }
+
+        .auth-back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #6254e8;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo">nova<span>cart.</span></a>
+        <nav class="nav-actions">
+            <a href="index.html">Home</a>
+            <a href="login.html">Sign In</a>
+        </nav>
+    </header>
+
+    <main class="auth-page">
+        <section class="auth-card">
+            <a href="index.html" class="auth-logo">
+                nova<span>cart.</span>
+            </a>
+
+            <span class="section-label">JOIN NOVACART</span>
+            <h1>Create your account.</h1>
+
+            <p class="auth-description">
+                Sign up to enjoy a simpler shopping experience.
+            </p>
+
+            <form id="registerForm" class="auth-form">
+                <label for="name">Full Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    minlength="2"
+                    maxlength="100"
+                    autocomplete="name"
+                    required
+                >
+
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="At least 8 characters"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <label for="confirmPassword">Confirm Password</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Enter your password again"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <button type="submit" id="registerButton" class="auth-submit">
+                    Create Account →
+                </button>
+
+                <div id="authMessage" class="auth-message" role="status"></div>
+            </form>
+
+            <div class="auth-bottom">
+                Already have an account?
+                <a href="login.html">Sign in</a>
+            </div>
+
+            <a href="index.html" class="auth-back">
+                ← Back to shopping
+            </a>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById("registerForm");
+        const message = document.getElementById("authMessage");
+        const button = document.getElementById("registerButton");
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword =
+                document.getElementById("confirmPassword").value;
+
+            message.className = "auth-message";
+            message.textContent = "";
+
+            if (password !== confirmPassword) {
+                message.className = "auth-message error";
+                message.textContent = "Passwords do not match.";
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "Creating account...";
+
+            try {
+                const response = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message || "Registration failed."
+                    );
+                }
+
+                message.className = "auth-message success";
+                message.textContent = "Account created! Redirecting...";
+
+                localStorage.setItem("novacart_token", data.token);
+                localStorage.setItem(
+                    "novacart_user",
+                    JSON.stringify(data.user)
+                );
+
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 1000);
+
+            } catch (error) {
+                message.className = "auth-message error";
+                message.textContent =
+                    error.message || "Could not connect to the server.";
+            } finally {
+                button.disabled = false;
+                button.textContent = "Create Account →";
+            }
+        });
+    </script>
+</body>
+</html>

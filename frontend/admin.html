@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaCart | Admin Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f6fb;
+            color: #20213a;
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #fff;
+            border-right: 1px solid #ececf4;
+            padding: 25px 16px;
+            position: fixed;
+            inset: 0 auto 0 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 10px 35px;
+            color: #6c5ce7;
+        }
+
+        .brand span {
+            display: inline-grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            color: white;
+            border-radius: 12px;
+            background: #6c5ce7;
+            margin-right: 7px;
+        }
+
+        .nav-label {
+            color: #9293a6;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            margin: 0 12px 12px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: #777990;
+            text-align: left;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: #efedff;
+            color: #6c5ce7;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+            width: calc(100% - 240px);
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            color: #6c5ce7;
+            font-size: 10px;
+            letter-spacing: 1.8px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 30px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #85879d;
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .primary-btn,
+        .secondary-btn,
+        .danger-btn {
+            border: none;
+            padding: 11px 15px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .primary-btn {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #5544d3;
+        }
+
+        .secondary-btn {
+            background: #efedff;
+            color: #6c5ce7;
+        }
+
+        .danger-btn {
+            background: #fff0f2;
+            color: #df4660;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 17px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #ececf4;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 8px 30px rgba(36, 32, 75, .04);
+            min-width: 0;
+        }
+
+        .stat-label {
+            color: #85879d;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 27px;
+            font-weight: 800;
+            margin-top: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .stat-note {
+            color: #9293a6;
+            font-size: 11px;
+            margin-top: 8px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #ececf4;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(36, 32, 75, .04);
+        }
+
+        .panel-header {
+            padding: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #ececf4;
+        }
+
+        .panel-title {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .panel-subtitle {
+            color: #85879d;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search {
+            border: 1px solid #e4e4ee;
+            border-radius: 9px;
+            padding: 11px 13px;
+            width: 220px;
+            max-width: 100%;
+            outline: none;
+        }
+
+        .search:focus,
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #6c5ce7;
+            outline: none;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #fafaff;
+            color: #85879d;
+            text-align: left;
+            font-size: 10px;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            padding: 15px 20px;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-top: 1px solid #f0f0f6;
+            font-size: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            background: #efedff;
+            color: #6c5ce7;
+        }
+
+        .badge.green {
+            background: #e4f8ee;
+            color: #138957;
+        }
+
+        .badge.orange {
+            background: #fff1dc;
+            color: #b77714;
+        }
+
+        .badge.red {
+            background: #ffeaee;
+            color: #d23e59;
+        }
+
+        .table-btn {
+            border: 1px solid #ececf4;
+            background: white;
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-size: 11px;
+            margin-right: 4px;
+        }
+
+        .table-btn:hover {
+            color: #6c5ce7;
+            border-color: #6c5ce7;
+        }
+
+        .table-btn.delete:hover {
+            color: #df4660;
+            border-color: #df4660;
+        }
+
+        .status-select {
+            padding: 8px;
+            border: 1px solid #ececf4;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: #85879d;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            font-size: 23px;
+        }
+
+        .section-heading p {
+            color: #85879d;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 20, 45, .55);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 50;
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 17px;
+            padding: 25px;
+            width: 100%;
+            max-width: 530px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .close-btn {
+            border: none;
+            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            font-size: 22px;
+            background: #f1f1f7;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 13px;
+            min-width: 0;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .field input,
+        .field textarea {
+            width: 100%;
+            border: 1px solid #e4e4ee;
+            border-radius: 9px;
+            padding: 12px;
+        }
+
+        .field textarea {
+            min-height: 75px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #20213a;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            z-index: 100;
+            display: none;
+            max-width: calc(100vw - 40px);
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.error {
+            background: #b92e47;
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        @media (max-width: 1050px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .main {
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 240px;
+                transform: translateX(-100%);
+                transition: transform .2s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 16px;
+            }
+
+            .mobile-menu {
+                display: inline-block;
+                border: 1px solid #ececf4;
+                background: white;
+                padding: 9px 12px;
+                border-radius: 8px;
+                margin-bottom: 18px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .search {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand"><span>N</span> NovaCart</div>
+
+        <div class="nav-label">WORKSPACE</div>
+
+        <button class="nav-btn active" data-section="dashboard">▦ Dashboard</button>
+        <button class="nav-btn" data-section="products">▣ Products</button>
+        <button class="nav-btn" data-section="orders">🛍 Orders</button>
+
+        <div class="sidebar-bottom">
+            <button class="nav-btn" id="storeBtn">↗ View Store</button>
+            <button class="nav-btn" id="refreshBtn">⟳ Refresh Data</button>
+            <button class="nav-btn" id="logoutBtn">⇥ Logout</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <button class="mobile-menu" id="mobileMenu">☰ Menu</button>
+
+        <header class="topbar">
+            <div>
+                <div class="eyebrow">NOVACART ADMINISTRATION</div>
+                <h1 id="pageTitle">Dashboard Overview</h1>
+                <p class="subtitle" id="pageSubtitle">
+                    Monitor your store and manage your business.
+                </p>
+            </div>
+
+            <button class="primary-btn" id="headerAddBtn">+ Add Product</button>
+        </header>
+
+        <!-- DASHBOARD -->
+        <section class="section active" id="dashboard">
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-value" id="totalProducts">—</div>
+                    <div class="stat-note">Products in catalog</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value" id="totalOrders">—</div>
+                    <div class="stat-note">All recorded orders</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-label">Recorded Revenue</div>
+                    <div class="stat-value" id="totalRevenue">—</div>
+                    <div class="stat-note">Excludes cancelled orders</div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-label">Customers</div>
+                    <div class="stat-value" id="totalUsers">—</div>
+                    <div class="stat-note">Registered user accounts</div>
+                </article>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title">Recent Products</div>
+                        <div class="panel-subtitle">Manage your product catalog.</div>
+                    </div>
+                    <button class="secondary-btn" data-go="products">View All Products →</button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="recentProductsBody">
+                            <tr><td colspan="6" class="empty">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title">Recent Orders</div>
+                        <div class="panel-subtitle">Latest customer purchases.</div>
+                    </div>
+                    <button class="secondary-btn" data-go="orders">View All Orders →</button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody id="recentOrdersBody">
+                            <tr><td colspan="5" class="empty">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section class="section" id="products">
+            <div class="section-heading">
+                <h2>Product Management</h2>
+                <p>Add, edit and delete products in your store.</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title">All Products</div>
+                        <div class="panel-subtitle" id="productCount">Manage inventory.</div>
+                    </div>
+
+                    <div class="panel-actions">
+                        <input class="search" type="search" id="productSearch"
+                               placeholder="Search products...">
+                        <button class="primary-btn" id="addProductBtn">+ Add Product</button>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productsBody">
+                            <tr><td colspan="6" class="empty">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ORDERS -->
+        <section class="section" id="orders">
+            <div class="section-heading">
+                <h2>Order Management</h2>
+                <p>View customer orders and update their status.</p>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title">All Orders</div>
+                        <div class="panel-subtitle" id="orderCount">Manage customer orders.</div>
+                    </div>
+
+                    <input class="search" type="search" id="orderSearch"
+                           placeholder="Search orders...">
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody id="ordersBody">
+                            <tr><td colspan="6" class="empty">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add New Product</h2>
+            <button class="close-btn" id="closeModal" type="button">×</button>
+        </div>
+
+        <form id="productForm">
+            <input type="hidden" id="productId">
+
+            <div class="form-grid">
+                <div class="field full">
+                    <label for="productName">Product Name *</label>
+                    <input id="productName" required maxlength="150">
+                </div>
+
+                <div class="field full">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription"></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="productPrice">Price (₹) *</label>
+                    <input id="productPrice" type="number" min="0.01"
+                           step="0.01" required>
+                </div>
+
+                <div class="field">
+                    <label for="productStock">Stock *</label>
+                    <input id="productStock" type="number" min="0"
+                           step="1" value="0" required>
+                </div>
+
+                <div class="field">
+                    <label for="productCategory">Category</label>
+                    <input id="productCategory" value="General">
+                </div>
+
+                <div class="field">
+                    <label for="productImage">Image URL</label>
+                    <input id="productImage" type="url"
+                           placeholder="https://example.com/image.jpg">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="secondary-btn" type="button" id="cancelModal">Cancel</button>
+                <button class="primary-btn" type="submit" id="saveBtn">Save Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+const API = "/api/admin";
+const TOKEN_KEY = "novacart_token";
+const USER_KEY = "novacart_user";
+
+let products = [];
+let orders = [];
+let toastTimer;
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+}
+
+function money(value) {
+    return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 2
+    }).format(Number(value) || 0);
+}
+
+function formatDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return "—";
+
+    return date.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+function toast(message, error = false) {
+    const element = $("toast");
+    element.textContent = message;
+    element.classList.toggle("error", error);
+    element.classList.add("show");
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => element.classList.remove("show"), 3000);
+}
+
+function goToLogin() {
+    location.replace("login.html?next=" + encodeURIComponent("admin.html"));
+}
+
+async function api(path, options = {}) {
+    const token = localStorage.getItem(TOKEN_KEY);
+
+    if (!token) {
+        goToLogin();
+        throw new Error("Please log in.");
+    }
+
+    const headers = {
+        Authorization: "Bearer " + token,
+        ...(options.body ? { "Content-Type": "application/json" } : {})
+    };
+
+    let response;
+
+    try {
+        response = await fetch(API + path, {
+            ...options,
+            headers
+        });
+    } catch {
+        throw new Error("Server connection failed. Check your backend.");
+    }
+
+    let data;
+
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error("Invalid server response.");
+    }
+
+    if (response.status === 401) {
+        localStorage.removeItem(TOKEN_KEY);
+        goToLogin();
+        throw new Error("Session expired. Please log in again.");
+    }
+
+    if (response.status === 403) {
+        throw new Error("Admin access required. Log in with an admin account.");
+    }
+
+    if (!response.ok || data.success === false) {
+        throw new Error(data.message || "Request failed.");
+    }
+
+    return data;
+}
+
+function badgeClass(status) {
+    if (status === "Delivered") return "green";
+    if (status === "Confirmed" || status === "Shipped") return "orange";
+    if (status === "Cancelled") return "red";
+    return "";
+}
+
+function emptyRow(columns, message) {
+    return `<tr><td colspan="${columns}" class="empty">${escapeHTML(message)}</td></tr>`;
+}
+
+function productRow(product) {
+    const stock = Number(product.stock) || 0;
+
+    return `
+        <tr>
+            <td>${Number(product.id)}</td>
+            <td><strong>${escapeHTML(product.name)}</strong></td>
+            <td>${escapeHTML(product.category || "General")}</td>
+            <td>${money(product.price)}</td>
+            <td>
+                <span class="badge ${stock === 0 ? "red" : stock < 5 ? "orange" : "green"}">
+                    ${stock}
+                </span>
+            </td>
+            <td>
+                <button class="table-btn" data-action="edit"
+                    data-id="${Number(product.id)}">Edit</button>
+                <button class="table-btn delete" data-action="delete"
+                    data-id="${Number(product.id)}">Delete</button>
+            </td>
+        </tr>`;
+}
+
+function renderProducts() {
+    const query = $("productSearch").value.trim().toLowerCase();
+
+    const filtered = products.filter(product =>
+        [product.name, product.category, product.description]
+            .join(" ")
+            .toLowerCase()
+            .includes(query)
+    );
+
+    $("productCount").textContent =
+        `${filtered.length} product(s) shown`;
+
+    $("productsBody").innerHTML = filtered.length
+        ? filtered.map(productRow).join("")
+        : emptyRow(6, "No products found.");
+
+    $("recentProductsBody").innerHTML = products.length
+        ? products.slice(0, 5).map(productRow).join("")
+        : emptyRow(6, "No products found.");
+}
+
+function orderRow(order, compact = false) {
+    const id = Number(order.id);
+    const status = String(order.status || "Pending");
+
+    if (compact) {
+        return `
+            <tr>
+                <td>#${id}</td>
+                <td>${escapeHTML(order.customer_name || "Customer")}</td>
+                <td>${money(order.total_amount)}</td>
+                <td>${escapeHTML(order.payment_method || "COD")}</td>
+                <td><span class="badge ${badgeClass(status)}">${escapeHTML(status)}</span></td>
+            </tr>`;
+    }
+
+    const statuses = [
+        "Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"
+    ];
+
+    return `
+        <tr>
+            <td>#${id}</td>
+            <td>
+                ${escapeHTML(order.customer_name || "Customer")}
+                <div class="subtitle">${escapeHTML(order.customer_email || "")}</div>
+            </td>
+            <td>${formatDate(order.created_at)}</td>
+            <td>${money(order.total_amount)}</td>
+            <td>${escapeHTML(order.payment_method || "COD")}</td>
+            <td>
+                <select class="status-select" data-order-id="${id}"
+                    data-old-status="${escapeHTML(status)}">
+                    ${statuses.map(value => `
+                        <option value="${value}" ${value === status ? "selected" : ""}>
+                            ${value}
+                        </option>
+                    `).join("")}
+                </select>
+            </td>
+        </tr>`;
+}
+
+function renderOrders() {
+    const query = $("orderSearch").value.trim().toLowerCase();
+
+    const filtered = orders.filter(order =>
+        [order.id, order.customer_name, order.customer_email, order.status]
+            .join(" ")
+            .toLowerCase()
+            .includes(query)
+    );
+
+    $("orderCount").textContent = `${filtered.length} order(s) shown`;
+
+    $("ordersBody").innerHTML = filtered.length
+        ? filtered.map(order => orderRow(order)).join("")
+        : emptyRow(6, "No orders found.");
+
+    $("recentOrdersBody").innerHTML = orders.length
+        ? orders.slice(0, 5).map(order => orderRow(order, true)).join("")
+        : emptyRow(5, "No orders found.");
+}
+
+async function loadStats() {
+    const data = await api("/stats");
+    const stats = data.stats;
+
+    $("totalProducts").textContent = Number(stats.totalProducts || 0);
+    $("totalOrders").textContent = Number(stats.totalOrders || 0);
+    $("totalRevenue").textContent = money(stats.totalRevenue);
+    $("totalUsers").textContent = Number(stats.totalUsers || 0);
+}
+
+async function loadProducts() {
+    const data = await api("/products");
+    products = Array.isArray(data.products) ? data.products : [];
+    renderProducts();
+}
+
+async function loadOrders() {
+    const data = await api("/orders");
+    orders = Array.isArray(data.orders) ? data.orders : [];
+    renderOrders();
+}
+
+async function refreshAll(showMessage = false) {
+    try {
+        await Promise.all([loadStats(), loadProducts(), loadOrders()]);
+        if (showMessage) toast("Dashboard data refreshed.");
+    } catch (error) {
+        console.error(error);
+        toast(error.message, true);
+    }
+}
+
+function showSection(id) {
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.toggle("active", section.id === id);
+    });
+
+    document.querySelectorAll("[data-section]").forEach(button => {
+        button.classList.toggle("active", button.dataset.section === id);
+    });
+
+    const titles = {
+        dashboard: ["Dashboard Overview", "Monitor your store and manage your business."],
+        products: ["Product Management", "Manage products and inventory."],
+        orders: ["Order Management", "Track orders and update delivery status."]
+    };
+
+    $("pageTitle").textContent = titles[id][0];
+    $("pageSubtitle").textContent = titles[id][1];
+    $("headerAddBtn").style.display = id === "orders" ? "none" : "inline-block";
+    $("sidebar").classList.remove("open");
+}
+
+function openModal(product = null) {
+    $("productForm").reset();
+
+    $("productId").value = product ? product.id : "";
+    $("modalTitle").textContent = product ? "Edit Product" : "Add New Product";
+    $("saveBtn").textContent = product ? "Save Changes" : "Save Product";
+
+    if (product) {
+        $("productName").value = product.name || "";
+        $("productDescription").value = product.description || "";
+        $("productPrice").value = product.price;
+        $("productStock").value = product.stock;
+        $("productCategory").value = product.category || "General";
+        $("productImage").value = product.image_url || "";
+    } else {
+        $("productCategory").value = "General";
+        $("productStock").value = "0";
+    }
+
+    $("modalBackdrop").classList.add("show");
+}
+
+function closeModal() {
+    $("modalBackdrop").classList.remove("show");
+}
+
+async function saveProduct(event) {
+    event.preventDefault();
+
+    const id = $("productId").value;
+
+    const payload = {
+        name: $("productName").value.trim(),
+        description: $("productDescription").value.trim(),
+        price: Number($("productPrice").value),
+        stock: Number($("productStock").value),
+        category: $("productCategory").value.trim() || "General",
+        image_url: $("productImage").value.trim()
+    };
+
+    if (!payload.name || !Number.isFinite(payload.price) ||
+        payload.price <= 0 || !Number.isInteger(payload.stock) ||
+        payload.stock < 0) {
+        toast("Enter valid product details.", true);
+        return;
+    }
+
+    const button = $("saveBtn");
+    button.disabled = true;
+
+    try {
+        const data = await api(
+            id ? "/products/" + encodeURIComponent(id) : "/products",
+            {
+                method: id ? "PUT" : "POST",
+                body: JSON.stringify(payload)
+            }
+        );
+
+        closeModal();
+        toast(data.message || "Product saved successfully.");
+        await Promise.all([loadProducts(), loadStats()]);
+    } catch (error) {
+        toast(error.message, true);
+    } finally {
+        button.disabled = false;
+    }
+}
+
+async function deleteProduct(id) {
+    const product = products.find(item => Number(item.id) === Number(id));
+    if (!product) return;
+
+    if (!confirm(`Delete "${product.name}"? This cannot be undone.`)) {
+        return;
+    }
+
+    try {
+        const data = await api(
+            "/products/" + encodeURIComponent(id),
+            { method: "DELETE" }
+        );
+
+        toast(data.message || "Product deleted.");
+        await Promise.all([loadProducts(), loadStats()]);
+    } catch (error) {
+        toast(error.message, true);
+    }
+}
+
+async function changeOrderStatus(select) {
+    const id = select.dataset.orderId;
+    const oldStatus = select.dataset.oldStatus;
+    const newStatus = select.value;
+
+    select.disabled = true;
+
+    try {
+        const data = await api(
+            "/orders/" + encodeURIComponent(id) + "/status",
+            {
+                method: "PATCH",
+                body: JSON.stringify({ status: newStatus })
+            }
+        );
+
+        select.dataset.oldStatus = newStatus;
+
+        const order = orders.find(item => Number(item.id) === Number(id));
+        if (order) order.status = newStatus;
+
+        renderOrders();
+        toast(data.message || "Order status updated.");
+        await loadStats();
+    } catch (error) {
+        toast(error.message, true);
+        select.value = oldStatus;
+    } finally {
+        select.disabled = false;
+    }
+}
+
+function init() {
+    if (!localStorage.getItem(TOKEN_KEY)) {
+        goToLogin();
+        return;
+    }
+
+    let user = {};
+
+    try {
+        user = JSON.parse(localStorage.getItem(USER_KEY) || "{}");
+    } catch {
+        user = {};
+    }
+
+    document.querySelectorAll("[data-section]").forEach(button => {
+        button.addEventListener("click", () => showSection(button.dataset.section));
+    });
+
+    document.querySelectorAll("[data-go]").forEach(button => {
+        button.addEventListener("click", () => showSection(button.dataset.go));
+    });
+
+    $("headerAddBtn").addEventListener("click", () => openModal());
+    $("addProductBtn").addEventListener("click", () => openModal());
+
+    $("closeModal").addEventListener("click", closeModal);
+    $("cancelModal").addEventListener("click", closeModal);
+    $("productForm").addEventListener("submit", saveProduct);
+
+    $("modalBackdrop").addEventListener("click", event => {
+        if (event.target === $("modalBackdrop")) closeModal();
+    });
+
+    $("productsBody").addEventListener("click", event => {
+        const button = event.target.closest("[data-action]");
+        if (!button) return;
+
+        const id = Number(button.dataset.id);
+
+        if (button.dataset.action === "edit") {
+            const product = products.find(item => Number(item.id) === id);
+            if (product) openModal(product);
+        }
+
+        if (button.dataset.action === "delete") {
+            deleteProduct(id);
+        }
+    });
+
+    $("recentProductsBody").addEventListener("click", event => {
+        const button = event.target.closest("[data-action]");
+        if (!button) return;
+
+        const id = Number(button.dataset.id);
+
+        if (button.dataset.action === "edit") {
+            const product = products.find(item => Number(item.id) === id);
+            if (product) openModal(product);
+        }
+
+        if (button.dataset.action === "delete") {
+            deleteProduct(id);
+        }
+    });
+
+    $("ordersBody").addEventListener("change", event => {
+        const select = event.target.closest("[data-order-id]");
+        if (select) changeOrderStatus(select);
+    });
+
+    $("productSearch").addEventListener("input", renderProducts);
+    $("orderSearch").addEventListener("input", renderOrders);
+
+    $("refreshBtn").addEventListener("click", () => refreshAll(true));
+
+    $("storeBtn").addEventListener("click", () => {
+        location.href = "index.html";
+    });
+
+    $("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+        location.href = "login.html";
+    });
+
+    $("mobileMenu").addEventListener("click", () => {
+        $("sidebar").classList.toggle("open");
+    });
+
+    refreshAll();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

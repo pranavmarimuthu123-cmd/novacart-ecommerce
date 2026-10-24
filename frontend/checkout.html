@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | NovaCart</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .checkout-page {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 0 24px;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .checkout-card {
+            padding: 28px;
+            border: 1px solid #e9e9f1;
+            border-radius: 18px;
+            background: white;
+        }
+
+        .checkout-card h2 {
+            margin: 0 0 20px;
+        }
+
+        .checkout-form label {
+            display: block;
+            margin: 18px 0 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .checkout-form input,
+        .checkout-form textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #e2e2ed;
+            border-radius: 10px;
+            font: inherit;
+            outline: none;
+        }
+
+        .checkout-form textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .checkout-form input:focus,
+        .checkout-form textarea:focus {
+            border-color: #6254e8;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            border: 1px solid #dedafc;
+            border-radius: 12px;
+            background: #f8f7ff;
+        }
+
+        .payment-option input {
+            width: auto;
+            margin-top: 4px;
+        }
+
+        .payment-option p {
+            margin: 5px 0 0;
+            color: #77788c;
+            font-size: 13px;
+        }
+
+        .order-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+
+        .order-line.total {
+            padding-top: 18px;
+            border-top: 1px solid #e9e9f1;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            background: #6254e8;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .place-order-btn:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .notice {
+            display: none;
+            padding: 13px;
+            margin-top: 16px;
+            border-radius: 9px;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .notice.error {
+            display: block;
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        .notice.success {
+            display: block;
+            background: #eafaf0;
+            color: #177245;
+        }
+
+        .checkout-back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #6254e8;
+        }
+
+        .empty-message {
+            padding: 45px 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 800px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo">nova<span>cart.</span></a>
+
+        <nav class="nav-actions">
+            <a href="index.html">Continue Shopping</a>
+            <a href="orders.html">My Orders</a>
+        </nav>
+    </header>
+
+    <main class="checkout-page">
+        <span class="section-label">ALMOST YOURS</span>
+        <h1>Checkout<span style="color:#6254e8">.</span></h1>
+        <p style="color:#77788c; margin:10px 0 28px">
+            Confirm your delivery details and place your order.
+        </p>
+
+        <div id="emptyMessage" class="checkout-card empty-message" hidden>
+            <h2>Your cart is empty</h2>
+            <p>Add products before proceeding to checkout.</p>
+            <a href="index.html" class="checkout-back">Browse products →</a>
+        </div>
+
+        <div id="checkoutGrid" class="checkout-grid">
+            <section class="checkout-card">
+                <h2>Delivery Details</h2>
+
+                <form id="checkoutForm" class="checkout-form">
+                    <label for="fullName">Full Name</label>
+                    <input
+                        id="fullName"
+                        name="fullName"
+                        type="text"
+                        maxlength="100"
+                        autocomplete="name"
+                        required
+                    >
+
+                    <label for="phone">Phone Number</label>
+                    <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        maxlength="20"
+                        autocomplete="tel"
+                        placeholder="Enter contact number"
+                        required
+                    >
+
+                    <label for="address">Full Delivery Address</label>
+                    <textarea
+                        id="address"
+                        name="address"
+                        minlength="10"
+                        maxlength="1000"
+                        autocomplete="street-address"
+                        placeholder="House number, street, area, city, state and PIN code"
+                        required
+                    ></textarea>
+
+                    <h2 style="margin-top:30px">Payment Method</h2>
+
+                    <label class="payment-option">
+                        <input
+                            type="radio"
+                            name="payment"
+                            value="Cash on Delivery"
+                            checked
+                        >
+
+                        <span>
+                            <strong>Cash on Delivery</strong>
+                            <p>Pay when your order arrives.</p>
+                        </span>
+                    </label>
+
+                    <div id="checkoutNotice" class="notice" role="status"></div>
+
+                    <button
+                        id="placeOrderButton"
+                        class="place-order-btn"
+                        type="submit"
+                    >
+                        Place Order →
+                    </button>
+                </form>
+            </section>
+
+            <aside class="checkout-card">
+                <h2>Order Summary</h2>
+                <div id="orderItems"></div>
+
+                <div class="order-line">
+                    <span>Shipping</span>
+                    <strong>FREE</strong>
+                </div>
+
+                <div class="order-line total">
+                    <span>Total</span>
+                    <strong id="orderTotal">₹0.00</strong>
+                </div>
+
+                <p style="font-size:12px; color:#77788c; line-height:1.7">
+                    Prices and stock are verified by the server when you place
+                    your order.
+                </p>
+
+                <a href="cart.html" class="checkout-back">← Back to cart</a>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        const CART_KEY = "novacart_cart";
+        const TOKEN_KEY = "novacart_token";
+
+        const form = document.getElementById("checkoutForm");
+        const notice = document.getElementById("checkoutNotice");
+        const placeOrderButton =
+            document.getElementById("placeOrderButton");
+
+        function getCart() {
+            try {
+                const cart = JSON.parse(
+                    localStorage.getItem(CART_KEY) || "[]"
+                );
+
+                return Array.isArray(cart) ? cart : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function formatPrice(value) {
+            return new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+                minimumFractionDigits: 2
+            }).format(Number(value) || 0);
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]);
+        }
+
+        function showNotice(type, text) {
+            notice.className = "notice " + type;
+            notice.textContent = text;
+        }
+
+        function renderSummary() {
+            const cart = getCart();
+
+            if (cart.length === 0) {
+                document.getElementById("checkoutGrid").hidden = true;
+                document.getElementById("emptyMessage").hidden = false;
+                return;
+            }
+
+            document.getElementById("checkoutGrid").hidden = false;
+            document.getElementById("emptyMessage").hidden = true;
+
+            const subtotal = cart.reduce((sum, item) => {
+                return sum + Number(item.price) * Number(item.quantity);
+            }, 0);
+
+            document.getElementById("orderItems").innerHTML =
+                cart.map(item => `
+                    <div class="order-line">
+                        <span>
+                            ${escapeHTML(item.name)}
+                            × ${Number(item.quantity)}
+                        </span>
+
+                        <strong>
+                            ${formatPrice(
+                                Number(item.price) * Number(item.quantity)
+                            )}
+                        </strong>
+                    </div>
+                `).join("");
+
+            document.getElementById("orderTotal").textContent =
+                formatPrice(subtotal);
+        }
+
+        async function loadUser() {
+            const token = localStorage.getItem(TOKEN_KEY);
+
+            if (!token) {
+                window.location.href = "login.html?next=checkout.html";
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/auth/me", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    localStorage.removeItem(TOKEN_KEY);
+                    localStorage.removeItem("novacart_user");
+
+                    window.location.href =
+                        "login.html?next=checkout.html";
+
+                    return;
+                }
+
+                document.getElementById("fullName").value =
+                    data.user.name || "";
+
+            } catch (error) {
+                showNotice(
+                    "error",
+                    "Unable to verify your login. Please check that the server is running."
+                );
+            }
+        }
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const token = localStorage.getItem(TOKEN_KEY);
+            const cart = getCart();
+
+            if (!token) {
+                window.location.href = "login.html?next=checkout.html";
+                return;
+            }
+
+            if (cart.length === 0) {
+                showNotice("error", "Your cart is empty.");
+                return;
+            }
+
+            const fullName =
+                document.getElementById("fullName").value.trim();
+
+            const phone =
+                document.getElementById("phone").value.trim();
+
+            const address =
+                document.getElementById("address").value.trim();
+
+            if (fullName.length < 2) {
+                showNotice("error", "Please enter your full name.");
+                return;
+            }
+
+            if (phone.length < 7) {
+                showNotice("error", "Please enter a valid phone number.");
+                return;
+            }
+
+            if (address.length < 10) {
+                showNotice("error", "Please enter your complete address.");
+                return;
+            }
+
+            placeOrderButton.disabled = true;
+            placeOrderButton.textContent = "Placing Order...";
+
+            try {
+                // Combine address and contact details into the
+                // shipping_address field supported by our backend.
+                const shippingAddress =
+                    `${fullName}\nPhone: ${phone}\nAddress: ${address}`;
+
+                const response = await fetch("/api/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        items: cart.map(item => ({
+                            id: Number(item.id),
+                            quantity: Number(item.quantity)
+                        })),
+                        shipping_address: shippingAddress
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message || "Unable to place order."
+                    );
+                }
+
+                // Clear the cart only after the server confirms success.
+                localStorage.removeItem(CART_KEY);
+
+                showNotice(
+                    "success",
+                    `Order #${data.order.id} placed successfully! Redirecting to your orders...`
+                );
+
+                placeOrderButton.textContent = "Order Placed ✓";
+
+                setTimeout(() => {
+                    window.location.href = "orders.html";
+                }, 1500);
+
+            } catch (error) {
+                showNotice(
+                    "error",
+                    error.message || "Something went wrong."
+                );
+
+                placeOrderButton.disabled = false;
+                placeOrderButton.textContent = "Place Order →";
+            }
+        });
+
+        renderSummary();
+        loadUser();
+    </script>
+</body>
+</html>

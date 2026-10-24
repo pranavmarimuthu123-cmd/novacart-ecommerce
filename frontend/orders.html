@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | NovaCart</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .orders-page {
+            max-width: 1050px;
+            margin: 45px auto;
+            padding: 0 24px;
+            min-height: 65vh;
+        }
+
+        .orders-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .orders-heading h1 {
+            margin-top: 8px;
+            font-size: 34px;
+            letter-spacing: -1px;
+        }
+
+        .orders-heading p {
+            margin-top: 5px;
+            color: #77788c;
+            font-size: 13px;
+        }
+
+        .orders-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .order-card {
+            overflow: hidden;
+            border: 1px solid #e9e9f1;
+            border-radius: 17px;
+            background: white;
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 22px;
+            background: #f8f7ff;
+            border-bottom: 1px solid #e9e9f1;
+        }
+
+        .order-id {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .order-date {
+            margin-top: 5px;
+            color: #77788c;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #fff1d6;
+            color: #8a5a00;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .status-confirmed,
+        .status-shipped {
+            background: #e9e7ff;
+            color: #5143c6;
+        }
+
+        .status-delivered {
+            background: #e2f8e9;
+            color: #177245;
+        }
+
+        .status-cancelled {
+            background: #ffe7e7;
+            color: #b42318;
+        }
+
+        .order-body {
+            padding: 22px;
+        }
+
+        .order-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .info-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #77788c;
+            font-size: 11px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .shipping-address {
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 1px solid #e9e9f1;
+        }
+
+        .address-value {
+            color: #55566a;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
+
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 18px 22px;
+            border-top: 1px solid #e9e9f1;
+        }
+
+        .order-total-label {
+            color: #77788c;
+            font-size: 12px;
+        }
+
+        .order-total {
+            margin-top: 4px;
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .payment-label {
+            color: #177245;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .empty-orders {
+            padding: 60px 20px;
+            border: 1px solid #e9e9f1;
+            border-radius: 17px;
+            text-align: center;
+        }
+
+        .empty-orders .icon {
+            font-size: 50px;
+        }
+
+        .empty-orders h2 {
+            margin-top: 15px;
+        }
+
+        .empty-orders p {
+            margin-top: 8px;
+            color: #77788c;
+            font-size: 13px;
+        }
+
+        .message {
+            padding: 20px;
+            border-radius: 12px;
+            background: #fff0f0;
+            color: #b42318;
+            font-size: 13px;
+        }
+
+        .loading {
+            padding: 35px;
+            color: #77788c;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            color: #6254e8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 600px) {
+            .orders-heading h1 {
+                font-size: 27px;
+            }
+
+            .order-top,
+            .order-body,
+            .order-footer {
+                padding: 17px;
+            }
+
+            .order-info-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo">nova<span>cart.</span></a>
+
+        <nav class="nav-actions">
+            <a href="index.html">Home</a>
+            <a href="cart.html">Cart</a>
+        </nav>
+    </header>
+
+    <main class="orders-page">
+        <div class="orders-heading">
+            <div>
+                <span class="section-label">YOUR PURCHASES</span>
+                <h1>My Orders<span style="color:#6254e8">.</span></h1>
+                <p>Track your orders and check their latest status.</p>
+            </div>
+
+            <a href="index.html" class="primary-btn">Shop More →</a>
+        </div>
+
+        <div id="ordersList" class="orders-list">
+            <div class="loading">Loading your orders...</div>
+        </div>
+
+        <a href="index.html" class="back-link">← Continue Shopping</a>
+    </main>
+
+    <footer class="footer">
+        <a href="index.html" class="logo">nova<span>cart.</span></a>
+        <p>Discover more. Shop smarter.</p>
+        <span>© 2026 NovaCart</span>
+    </footer>
+
+    <script>
+        const ordersList = document.getElementById("ordersList");
+
+        function formatPrice(value) {
+            return new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+                minimumFractionDigits: 2
+            }).format(Number(value) || 0);
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]);
+        }
+
+        function formatDate(value) {
+            const date = new Date(value);
+
+            if (Number.isNaN(date.getTime())) {
+                return "Date unavailable";
+            }
+
+            return date.toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        function statusClass(status) {
+            const safeStatus = String(status || "").toLowerCase();
+
+            if (safeStatus === "confirmed") return "status-confirmed";
+            if (safeStatus === "shipped") return "status-shipped";
+            if (safeStatus === "delivered") return "status-delivered";
+            if (safeStatus === "cancelled") return "status-cancelled";
+
+            return "";
+        }
+
+        function renderOrders(orders) {
+            if (!orders.length) {
+                ordersList.innerHTML = `
+                    <div class="empty-orders">
+                        <div class="icon">📦</div>
+                        <h2>No orders yet</h2>
+                        <p>Your placed orders will appear here.</p>
+                        <a href="index.html" class="primary-btn">
+                            Start Shopping →
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            ordersList.innerHTML = orders.map(order => `
+                <article class="order-card">
+                    <div class="order-top">
+                        <div>
+                            <div class="order-id">
+                                Order #${Number(order.id)}
+                            </div>
+
+                            <div class="order-date">
+                                Placed on ${formatDate(order.created_at)}
+                            </div>
+                        </div>
+
+                        <span class="status-badge ${statusClass(order.status)}">
+                            ${escapeHTML(order.status || "Pending")}
+                        </span>
+                    </div>
+
+                    <div class="order-body">
+                        <div class="order-info-grid">
+                            <div>
+                                <span class="info-label">PAYMENT METHOD</span>
+                                <div class="info-value">
+                                    ${escapeHTML(order.payment_method || "Cash on Delivery")}
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="info-label">ORDER REFERENCE</span>
+                                <div class="info-value">
+                                    #NC-${String(order.id).padStart(5, "0")}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="shipping-address">
+                            <span class="info-label">DELIVERY ADDRESS</span>
+                            <div class="address-value">
+                                ${escapeHTML(order.shipping_address || "Address unavailable")}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-footer">
+                        <div>
+                            <div class="order-total-label">Order Total</div>
+                            <div class="order-total">
+                                ${formatPrice(order.total_amount)}
+                            </div>
+                        </div>
+
+                        <div class="payment-label">
+                            ✓ Order recorded
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        async function loadOrders() {
+            const token = localStorage.getItem("novacart_token");
+
+            if (!token) {
+                window.location.href = "login.html?next=orders.html";
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/orders/my", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.status === 401) {
+                    localStorage.removeItem("novacart_token");
+                    localStorage.removeItem("novacart_user");
+
+                    window.location.href = "login.html?next=orders.html";
+                    return;
+                }
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "Unable to load orders.");
+                }
+
+                renderOrders(data.orders || []);
+
+            } catch (error) {
+                ordersList.innerHTML = `
+                    <div class="message">
+                        ${escapeHTML(error.message)}
+                        <br><br>
+                        Please check that your backend server is running.
+                    </div>
+                `;
+            }
+        }
+
+        loadOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NovaCart | Online Shopping</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Announcement -->
+    <div class="announcement">
+        ✨ Welcome to NovaCart — Discover something amazing!
+    </div>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <a href="index.html" class="logo">nova<span>cart.</span></a>
+
+        <div class="search-box">
+            <span>⌕</span>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search products..."
+                autocomplete="off"
+            >
+        </div>
+
+        <nav class="nav-actions">
+            <a href="login.html" id="accountLink">Sign In</a>
+
+            <a href="orders.html" class="orders-link">My Orders</a>
+
+            <a href="cart.html" class="cart-link">
+                🛒 Cart <span id="cartCount">0</span>
+            </a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <span class="eyebrow">THE EVERYDAY COLLECTION</span>
+
+                <h1>Find your<br>next <span>favourite.</span></h1>
+
+                <p>
+                    Discover products you'll love.
+                    Great finds, great prices, all in one place.
+                </p>
+
+                <a href="#products" class="primary-btn">
+                    Explore Products <span>→</span>
+                </a>
+
+                <div class="hero-stats">
+                    <div>
+                        <strong>Quality</strong>
+                        <span>Products</span>
+                    </div>
+
+                    <div>
+                        <strong>Easy</strong>
+                        <span>Shopping</span>
+                    </div>
+
+                    <div>
+                        <strong>Secure</strong>
+                        <span>Checkout</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-orbit"></div>
+
+                <div class="hero-product">
+                    <span class="hero-emoji">🎧</span>
+                    <span class="floating-tag">TRENDING NOW ↗</span>
+                </div>
+
+                <div class="floating-card">
+                    <span class="floating-icon">✦</span>
+                    <div>
+                        <strong>Made for you</strong>
+                        <p>Find your next favourite</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories -->
+        <section class="categories section-container">
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">BROWSE YOUR WAY</span>
+                    <h2>Shop by category</h2>
+                </div>
+            </div>
+
+            <div class="category-grid">
+                <button class="category-card active" data-category="All">
+                    <span>✦</span>
+                    <strong>All Products</strong>
+                </button>
+
+                <button class="category-card" data-category="Electronics">
+                    <span>🎧</span>
+                    <strong>Electronics</strong>
+                </button>
+
+                <button class="category-card" data-category="Fashion">
+                    <span>👕</span>
+                    <strong>Fashion</strong>
+                </button>
+
+                <button class="category-card" data-category="Accessories">
+                    <span>⌚</span>
+                    <strong>Accessories</strong>
+                </button>
+
+                <button class="category-card" data-category="Home">
+                    <span>🏡</span>
+                    <strong>Home & Living</strong>
+                </button>
+            </div>
+        </section>
+
+        <!-- Products -->
+        <section class="products-section section-container" id="products">
+            <div class="section-heading products-heading">
+                <div>
+                    <span class="section-label">HANDPICKED FOR YOU</span>
+                    <h2>Explore products<span class="heading-dot">.</span></h2>
+                    <p>Discover your next favourite find.</p>
+                </div>
+
+                <select id="sortSelect" aria-label="Sort products">
+                    <option value="default">Featured</option>
+                    <option value="low">Price: Low to High</option>
+                    <option value="high">Price: High to Low</option>
+                    <option value="name">Name: A to Z</option>
+                </select>
+            </div>
+
+            <div id="productGrid" class="product-grid">
+                <div class="loading-message">Loading amazing products...</div>
+            </div>
+
+            <div id="emptyState" class="empty-state hidden">
+                <span>🔎</span>
+                <h3>No products found</h3>
+                <p>Try another search or choose a different category.</p>
+                <button id="resetFilters" class="primary-btn">
+                    View All Products
+                </button>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits section-container">
+            <div class="benefit-card">
+                <span>🚚</span>
+                <div>
+                    <h3>Easy Ordering</h3>
+                    <p>Place your order in a few simple steps.</p>
+                </div>
+            </div>
+
+            <div class="benefit-card">
+                <span>🔒</span>
+                <div>
+                    <h3>Secure Accounts</h3>
+                    <p>Your account is protected by authentication.</p>
+                </div>
+            </div>
+
+            <div class="benefit-card">
+                <span>📦</span>
+                <div>
+                    <h3>Order Tracking</h3>
+                    <p>Keep track of your order status.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="index.html" class="logo">nova<span>cart.</span></a>
+
+        <p>Discover more. Shop smarter.</p>
+
+        <span>© 2026 NovaCart. Built with care.</span>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
